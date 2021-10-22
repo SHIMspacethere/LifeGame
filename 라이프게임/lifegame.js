@@ -2,19 +2,43 @@ const btn = document.getElementById("btn"); // 버튼 메소드
 const xInput = document.getElementById("xInput") // x값 메소드
 const yInput = document.getElementById("yInput") // y값 메소드
 let maxNum = 100, minNum = 10 // 배열크기 최솟,최댓값
-let arr // 배열초기화
-let calc
+let arr // 배열1초기화
+let calc // 배열2초기화
 let defaultLength = 750 // 총 길이
-let playConfig = 0
+let playConfig = 0 // 타임스킵 실행여부
 let count = 0
 
+
+// ---------------------- 목록 ------------------------- //
 // 오디오 테스트
-let audio_Error = new Audio('Probe_Error.MP3') // 사운드 테스트
+// ------ [ 버튼 함수 ] ------
+// 버튼 함수 - 입력
+// 버튼 함수 - 시간
+// 버튼 함수 - button_play
+// 버튼 함수 - button_stop
+// 버튼 함수 - button_oneturn
+// ------ [ LifeGame ] ------
+// LifeGame - 배열 생성
+// LifeGame - 출력
+// LifeGame - 계산 처리
+// LifeGame - 새로고침
+
+
+
+// 오디오 테스트 //
+let audio_Error = new Audio('Probe_Error.MP3')
 let audio_Build = new Audio('Probe_Build.MP3')
+let audio_Stop = new Audio('Probe_Stop.wav')
+let audio_TimeSkip = new Audio('Probe_TimeSkip.mp3')
+let audio_Button = new Audio('Probe_Button.wav')
 audio_Error.volume = 0.4
 audio_Build.volume = 0.4
+audio_Stop.volume = 0.4
+audio_TimeSkip.volume = 0.8
+audio_Button.volume = 0.4
 
-// 버튼 함수
+
+// 버튼 함수 - 입력
 function buttonClick() { 
     if (xInput.value > maxNum || yInput.value > maxNum ) {
         audio_Error.play()
@@ -43,15 +67,18 @@ function buttonClick() {
     }
 }
 
-// 시간 버튼
+
+// 버튼 함수 - 시간
 function createTimeButton() {
     document.write("<button type='button_play'><img src='icon_play.png' onclick='func_play()'></button>")
     document.write("<button type='button_stop'><img src='icon_stop.png' onclick='func_stop()'></button>")
     document.write("<button type='button_oneturn'><img src='icon_oneturn.png' onclick='func_oneturn()'></button>")
 }
 
-// button_play
+
+// 버튼 함수 - button_play
 function func_play() {
+    audio_TimeSkip.play()
     playConfig = 1
     func_playloop()
         function func_playloop() {
@@ -64,17 +91,21 @@ function func_play() {
     }
 }
 
-// button_stop
+// 버튼 함수 - button_stop
 function func_stop() {
+    audio_Stop.play()
     playConfig = 0
 }
 
-// button_oneturn
+// 버튼 함수 - button_oneturn
 function func_oneturn() {
+    audio_Button.play()
     if (playConfig == 0) {
         refresh()
     }
 }
+
+// -------------------------------------------------------- //
 
 // LifeGame - 배열 생성
 function createArray(xnum, ynum, init) {
@@ -101,7 +132,6 @@ function createArray2(xnum, ynum, init){
     }
     return x
 }
-
 
 // LifeGame - 출력
 function gamePlay() {
@@ -132,14 +162,8 @@ function gamePlay() {
     document.write("</table>")
 }
 
-// LifeGame - 새로고침
-function refresh() {
-    calculator()
-    document.getElementById('btnTable').remove()
-    gamePlay()
-}
 
-// LifeGame - 게임
+// LifeGame - 계산 처리
 function calculator() {
     let xnum = parseInt(xInput.value)
     let ynum = parseInt(yInput.value)
@@ -178,11 +202,10 @@ function calculator() {
 
 }
 
-window.addEventListener("keypress", checkKeyPressed, false);
 
-function checkKeyPressed(e) {
-	if (e.charCode === 97) {
-        alert("!")
-        //refresh()
-	}
+// LifeGame - 새로고침
+function refresh() {
+    calculator()
+    document.getElementById('btnTable').remove()
+    gamePlay()
 }
