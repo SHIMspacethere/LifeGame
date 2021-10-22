@@ -1,0 +1,19 @@
+#btn {
+    display: inline-block;  padding: 9.5px 15px;
+    border-radius: 8px;
+    background-color: gray;
+    color: white;
+    font-size: 22px;
+    font-weight: 700;
+    cursor: pointer;
+  }
+
+#xInput {
+  width:100px;
+  height:20px;
+}
+
+#yInput {
+  width:100px;
+  height:20px;
+}
