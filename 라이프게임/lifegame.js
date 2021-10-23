@@ -6,7 +6,7 @@ let arr // 배열1초기화
 let calc // 배열2초기화
 let defaultLength = 750 // 총 길이
 let playConfig = 0 // 타임스킵 실행여부
-let count = 0
+let count = 0 // 턴 넘긴 횟수
 
 
 // ---------------------- 목록 ------------------------- //
@@ -21,18 +21,25 @@ let count = 0
 // LifeGame - 배열 생성
 // LifeGame - 출력
 // LifeGame - 계산 처리
+// LifeGame - 토글
 // LifeGame - 새로고침
 
 
 
 // 오디오 테스트 //
 let audio_Error = new Audio('Probe_Error.MP3')
+let audio_Error2 = new Audio('Probe_Error2.MP3')
 let audio_Build = new Audio('Probe_Build.MP3')
+let audio_Build1 = new Audio('Probe_Build1.wav')
+let audio_Build2 = new Audio('Probe_Build2.wav')
 let audio_Stop = new Audio('Probe_Stop.wav')
 let audio_TimeSkip = new Audio('Probe_TimeSkip.mp3')
 let audio_Button = new Audio('Probe_Button.wav')
 audio_Error.volume = 0.4
+audio_Error2.volume = 0.4
 audio_Build.volume = 0.4
+audio_Build1.volume = 0.5
+audio_Build2.volume = 0.5
 audio_Stop.volume = 0.4
 audio_TimeSkip.volume = 0.8
 audio_Button.volume = 0.4
@@ -111,7 +118,7 @@ function func_oneturn() {
 // LifeGame - 배열 생성
 function createArray(xnum, ynum, init) {
     let a, i, j, mat = []
-    for (let i = 0; i < xnum; i++) {
+    for (i = 0; i < xnum; i++) {
         a = []
         for (j = 0; j < ynum; j++){
             a[j] = init
@@ -122,10 +129,13 @@ function createArray(xnum, ynum, init) {
 }
 
 
+//document.write("<td id = 'arrBtn["+i+"]["+j+"]' inum = '"+i+"' jnum = '"+j+"' onclick = 'test()' bgcolor = '#aaaaaa'>") 왜 안되지? ㅅㅂ
+
 // LifeGame - 출력
 function gamePlay() {
     let xnum = parseInt(xInput.value), ynum = parseInt(yInput.value)    // HTML값 정수로 변환 !필수!
     let ratioLength = 0
+    document.write("<div id = 'counting'> count : "+count+"</div>")
         // 각 칸을 정사각형으로 나누기 위한 조건문 (비율 변환)
     if (xnum > ynum) {
         ratioLength = xnum / ynum
@@ -140,10 +150,10 @@ function gamePlay() {
         document.write("<tr>")
         for (let j = 0; j < ynum; j++) {
             if (arr[i][j] == 0) {
-                document.write("<td id = 'arrBtn["+i+"]["+j+"]' bgcolor = '#aaaaaa'>")
+                document.write("<td id = 'arrBtn["+i+"]["+j+"]' onclick = 'toggle("+i+", "+j+")' bgcolor = '#aaaaaa'>")
             }
             else {
-                document.write("<td id = 'arrBtn["+i+"]["+j+"]' bgcolor = '#333333'>")
+                document.write("<td id = 'arrBtn["+i+"]["+j+"]' onclick = 'toggle("+i+", "+j+")' bgcolor = '#333333'>")
             }
             document.write("</td>")
         }
@@ -196,9 +206,33 @@ function calculator() {
 }
 
 
+// LifeGame - 토글
+function toggle(i, j) {
+    if (playConfig == 1) { // TimeSkip 상태에선 불가능.
+        audio_Error2.play()
+        alert("게임을 정지해주세요.")
+    }
+    else {
+        if(arr[i][j] == 0) {
+            arr[i][j] = 1
+            audio_Build2.play()
+        }
+        else {
+            arr[i][j] = 0
+            audio_Build1.play()
+        }
+    }
+    document.getElementById('counting').remove()
+    document.getElementById('btnTable').remove()
+    gamePlay()
+}
+
+
 // LifeGame - 새로고침
 function refresh() {
+    count++
     calculator()    // 계산
+    document.getElementById('counting').remove()
     document.getElementById('btnTable').remove() // 과거 테이블 삭제
     gamePlay()  // 테이블 재생성
 }
